@@ -1,7 +1,7 @@
 import { ModelStatic } from 'sequelize';
 import { compareSync } from 'bcryptjs';
 import UserModel from '../../database/models/UserModel';
-import { generateToken } from '../../utils/JWT';
+import generateToken from '../../utils/JWT';
 
 class UserService {
   protected model: ModelStatic<UserModel> = UserModel;

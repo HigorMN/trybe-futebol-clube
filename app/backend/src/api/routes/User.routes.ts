@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express';
-import { verifyToken } from '../../utils/JWT';
 
 import UserController from '../controllers/UserController';
 import validateLogin from '../middlewares/LoginMiddleware';
+import verifyToken from '../middlewares/verifyToken';
 
 const router = Router();
 
