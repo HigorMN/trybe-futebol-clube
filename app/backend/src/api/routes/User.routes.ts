@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { verifyToken } from '../../utils/JWT';
 
 import UserController from '../controllers/UserController';
-import LoginMiddleware from '../middlewares/LoginMiddleware';
+import validateLogin from '../middlewares/LoginMiddleware';
 
 const router = Router();
 
@@ -14,7 +14,6 @@ router.get(
   (_req: Request, res: Response) => res.status(200).json({ role: res.locals.user.role }),
 );
 
-router.use(LoginMiddleware.validateBody);
-router.post('/login', controller.login);
+router.post('/login', validateLogin, controller.login);
 
 export default router;
