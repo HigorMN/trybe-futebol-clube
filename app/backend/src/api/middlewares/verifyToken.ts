@@ -1,7 +1,7 @@
 import { verify } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret' as string;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   try {
