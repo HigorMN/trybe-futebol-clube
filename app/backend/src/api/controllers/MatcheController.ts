@@ -4,12 +4,6 @@ import MatcheService from '../services/MatcheService';
 class MatcheController {
   private _service: MatcheService = new MatcheService();
 
-  getAll = async (_req: Request, res: Response) => {
-    const result = await this._service.getAll();
-
-    return res.status(200).json(result);
-  };
-
   getAllInProgress = async (req: Request, res: Response) => {
     const { inProgress } = req.query;
 
@@ -24,6 +18,22 @@ class MatcheController {
     const result = await this._service.getAllInProgress(validBoolean);
 
     return res.status(200).json(result);
+  };
+
+  finishedUpdate = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const { message } = await this._service.finishedUpdate(+id);
+
+    return res.status(200).json({ message });
+  };
+
+  updateGoals = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const { message } = await this._service.updateGoals(req.body, +id);
+
+    return res.status(200).json({ message });
   };
 }
 
