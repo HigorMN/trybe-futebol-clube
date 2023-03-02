@@ -11,6 +11,18 @@ class MatcheService {
       { model: Teams, as: 'awayTeam' },
     ] });
   }
+
+  async getAllInProgress(inProgress: boolean): Promise<Matches[]> {
+    return this.model.findAll(
+      {
+        where: { inProgress },
+        include: [
+          { model: Teams, as: 'homeTeam' },
+          { model: Teams, as: 'awayTeam' },
+        ],
+      },
+    );
+  }
 }
 
 export default MatcheService;

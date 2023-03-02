@@ -5,6 +5,6 @@ const matcheRoutes = Router();
 
 const controller = new MatcheController();
 
-matcheRoutes.get('/matches', controller.getAll);
+matcheRoutes.get('/matches', controller.getAllInProgress);
 
 export default matcheRoutes;
