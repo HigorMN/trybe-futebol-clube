@@ -15,6 +15,12 @@ class LeaderboardController {
 
     return res.status(200).json(result);
   };
+
+  getRankAll = async (_req: Request, res: Response) => {
+    const result = await this._service.getRankAll();
+
+    return res.status(200).json(result);
+  };
 }
 
 export default LeaderboardController;
