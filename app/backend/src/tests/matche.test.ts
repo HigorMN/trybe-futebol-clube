@@ -47,8 +47,8 @@ const listMock: Matches[] = [
 ];
 
 const listMockTeam: Teams[] = [
-  new Teams({ id: 1, teamName: 'Flamengo', }),
-  new Teams({ id: 2, teamName: 'Cruzeiro', }),
+  new Teams({ id: 1, teamName: 'Flamengo' }),
+  new Teams({ id: 2, teamName: 'Cruzeiro' }),
 ];
 
 const listMock2 = [
@@ -145,20 +145,84 @@ describe('Teste da aplicação: POST /matches', () => {
   beforeEach(sinon.restore);
 
   it('Deve criar partida', async () => {
-    const mockTeam1 = { id: 1, name: 'Team 1' };
-    const mockTeam2 = { id: 2, name: 'Team 2' };
-    sinon.stub(Model, 'findByPk')
-      .withArgs(mockTeam1.id).resolves(listMockTeam[0])
-      .withArgs(mockTeam2.id).resolves(listMockTeam[1]);
+    sinon
+      .stub(Model, 'findByPk')
+      .onFirstCall()
+      .resolves(listMockTeam[0])
+      .onSecondCall()
+      .resolves(listMockTeam[1]);
     sinon.stub(Model, 'create').resolves(listMock[1]);
 
-    const accessToken = jwt.sign({ id: 1, name: 'User' }, JWT_SECRET);
+    const token = jwt.sign(user, JWT_SECRET);
     const result = await request(app)
       .post('/matches')
-      .send({ homeTeamId: mockTeam1.id, awayTeamId: mockTeam2.id })
-      .set('Authorization', `Bearer ${accessToken}`);
+      .send({ homeTeamId: 16, awayTeamId: 8 })
+      .set('Authorization', token);
 
     expect(result.status).to.be.equal(201);
-    expect(result.body).to.deep.equal({ createdMatche: listMock2[1] });
+    expect(result.body).to.deep.equal(listMock2[1]);
+  });
+
+  it('Deve retornar um erro quando criar partida com o mesmo time', async () => {
+    sinon
+      .stub(Model, 'findByPk')
+      .onFirstCall()
+      .resolves(listMockTeam[0])
+      .onSecondCall()
+      .resolves(listMockTeam[0]);
+    sinon.stub(Model, 'create').resolves(listMock[1]);
+
+    const token = jwt.sign(user, JWT_SECRET);
+    const result = await request(app)
+      .post('/matches')
+      .send({ homeTeamId: 16, awayTeamId: 16 })
+      .set('Authorization', token);
+
+    expect(result.status).to.be.equal(422);
+    expect(result.body).to.deep.equal({
+      message: 'It is not possible to create a match with two equal teams',
+    });
+  });
+
+  it('Deve retornar um erro caso o time de casa não existe', async () => {
+    sinon
+      .stub(Model, 'findByPk')
+      .onFirstCall()
+      .resolves(null)
+      .onSecondCall()
+      .resolves(listMockTeam[0]);
+    sinon.stub(Model, 'create').resolves(listMock[1]);
+
+    const token = jwt.sign(user, JWT_SECRET);
+    const result = await request(app)
+      .post('/matches')
+      .send({ homeTeamId: 99, awayTeamId: 16 })
+      .set('Authorization', token);
+
+    expect(result.status).to.be.equal(404);
+    expect(result.body).to.deep.equal({
+      message: 'There is no team with such id!',
+    });
+  });
+
+  it('Deve retornar um erro caso o time de fora não existe', async () => {
+    sinon
+      .stub(Model, 'findByPk')
+      .onFirstCall()
+      .resolves(listMockTeam[0])
+      .onSecondCall()
+      .resolves(null);
+    sinon.stub(Model, 'create').resolves(listMock[1]);
+
+    const token = jwt.sign(user, JWT_SECRET);
+    const result = await request(app)
+      .post('/matches')
+      .send({ homeTeamId: 16, awayTeamId: 99 })
+      .set('Authorization', token);
+
+    expect(result.status).to.be.equal(404);
+    expect(result.body).to.deep.equal({
+      message: 'There is no team with such id!',
+    });
   });
 });
