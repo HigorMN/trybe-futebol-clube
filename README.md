@@ -22,7 +22,7 @@ O back-end do TFC possui regras de negócio específicas para popular a tabela d
 
 2. Certifique-se de ter o docker-compose instalado.
 
-3. Execute o comando `npm run compose:up` para iniciar a aplicação ou acesse a pasta `app` e rode o serviço node com o comando `docker-compose up -d --build`.
+3. Execute o comando `npm run compose:up` para iniciar a aplicação ou acesse a pasta `app` e rode com o comando `docker-compose up -d --build`.
 
 4. Acesse o endereço http://localhost:3000 para acessar o site e http://localhost:3001 para acessar a API.
 
