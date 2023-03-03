@@ -9,6 +9,12 @@ class LeaderboardController {
 
     return res.status(200).json(result);
   };
+
+  getRankAway = async (_req: Request, res: Response) => {
+    const result = await this._service.getRankAway();
+
+    return res.status(200).json(result);
+  };
 }
 
 export default LeaderboardController;

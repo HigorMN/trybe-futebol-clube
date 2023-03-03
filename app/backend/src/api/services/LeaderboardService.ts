@@ -19,6 +19,18 @@ class LeaderboardService {
 
     return orderResults(result);
   }
+
+  async getRankAway(): Promise<ITeamLeaderboard[]> {
+    const findTeam = await this.modelTeams.findAll();
+    const findMathes = await this.modelMatches.findAll({ where: { inProgress: false } });
+    const result: ITeamLeaderboard[] = [];
+    findTeam.forEach((t) => {
+      const matche = findMathes.filter((m) => m.awayTeamId === t.id);
+      result.push(leaderboardResults(t.teamName, matche, ['awayTeamGoals', 'homeTeamGoals']));
+    });
+
+    return orderResults(result);
+  }
 }
 
 export default LeaderboardService;
