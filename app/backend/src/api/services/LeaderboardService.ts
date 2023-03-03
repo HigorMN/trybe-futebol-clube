@@ -1,5 +1,5 @@
 import { ModelStatic } from 'sequelize';
-import { orderResults, resultsHome } from '../../utils/leaderboardUtils';
+import { orderResults, leaderboardResults } from '../../utils/leaderboardUtils';
 import Teams from '../../database/models/TeamsModel';
 import Matches from '../../database/models/MatchesModel';
 import ITeamLeaderboard from '../interfaces/ITeamLeaderboard';
@@ -14,7 +14,7 @@ class LeaderboardService {
     const result: ITeamLeaderboard[] = [];
     findTeam.forEach((t) => {
       const matche = findMathes.filter((m) => m.homeTeamId === t.id);
-      result.push(resultsHome(t.teamName, matche));
+      result.push(leaderboardResults(t.teamName, matche, ['homeTeamGoals', 'awayTeamGoals']));
     });
 
     return orderResults(result);
